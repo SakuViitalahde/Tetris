@@ -1,6 +1,7 @@
 import random
+from Block import Block
 
-class Block():
+class Blocks():
     def __init__(self):
         self.blocks = {"O":[[1,1],[1,1]],
                         "Z":[[2,2,0],[0,2,2],[0,0,0]],
@@ -15,5 +16,7 @@ class Block():
         Returns:
             Random block from the list 
         """
-        key = random.choice(self.blocks.keys())
-        return (key,self.blocks[key])
+        key = random.choice(list(self.blocks.keys()))
+        block = Block(self.blocks[key], key)
+        print(block.block_matrix)
+        return block

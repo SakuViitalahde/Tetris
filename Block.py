@@ -1,10 +1,12 @@
 import numpy as np
 
 class Block():
-    def __init__(self):
+    def __init__(self, block_matrix, shape):
         super().__init__()
-        self.block_position = (3,5)
-        self.block_matrix = [] # This is 2x2,3x3 or 4x4 depending from blocktype
+        self.block_position = (2,4) if len(block_matrix) == 2 else (2,3) 
+        self.block_matrix = block_matrix # This is 2x2,3x3 or 4x4 depending from blocktype
+        self.shape = shape # Shape of block
+        self.timer = 60
     
     def rotate_block(self):
         """
@@ -16,4 +18,9 @@ class Block():
         pass
 
     def move(self):
-        pass
+        """Move Block one space down"""
+        self.timer -= 1
+        if self.timer <= 0:
+            self.block_position = (self.block_position[0] + 1, self.block_position[1])
+            print(self.block_matrix)
+            self.timer = 60
