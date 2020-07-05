@@ -30,13 +30,15 @@ def main():
             next_block = blocks.get_random_block()
 
         # Move Block
-        current_block.move()
+        current_block.move(game_state)
 
         # Check collision in move
 
+        # Add Rotate, Left and Right move
+
         game_state.draw_window(win, current_block)
 
-        # Check tetris
+        # Check Tetris
         # Update Score
 
 main()

@@ -18,5 +18,4 @@ class Blocks():
         """
         key = random.choice(list(self.blocks.keys()))
         block = Block(self.blocks[key], key)
-        print(block.block_matrix)
         return block

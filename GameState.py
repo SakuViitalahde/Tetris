@@ -79,3 +79,10 @@ class GameState():
                     current_game_state[x + current_block.block_position[0]][y + current_block.block_position[1]] = e
 
         return current_game_state
+
+    def check_collision(self, block):
+        " Check current block collsion to grid or other blocks"
+        print(block.calculate_height() + block.block_position[0])
+        if block.calculate_height() + block.block_position[0] >= len(self.game_state) - 1:
+            return True
+        return False
