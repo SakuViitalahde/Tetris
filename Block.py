@@ -23,12 +23,15 @@ class Block():
         if self.timer <= 0:
             if not game_state.check_collision(self):
                 self.block_position = (self.block_position[0] + 1, self.block_position[1])
-                print(self.block_matrix)
                 self.timer = 10
     
     def calculate_height(self):
         height = 0
         for row in self.block_matrix:
-            if len(set(row)) > 1:
+            if len(set(row)) > 1 or self.set_unpacking(set(row)) > 0:
                 height += 1
         return height
+
+    def set_unpacking(self, s):
+        e, *_ = s
+        return e

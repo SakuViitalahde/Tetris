@@ -1,6 +1,7 @@
 import pygame
 import os
 import copy
+import numpy as np
 
 BACKGROUND_IMAGE = pygame.image.load(os.path.join("imgs","bg.png"))
 
@@ -75,14 +76,17 @@ class GameState():
         current_game_state = copy.deepcopy(self.game_state)
         for x, row in enumerate(current_block.block_matrix):
             for y, e in enumerate(row):
-                if e != 0:
+                if e != 0 and x + current_block.block_position[0] < 22:
                     current_game_state[x + current_block.block_position[0]][y + current_block.block_position[1]] = e
 
         return current_game_state
 
     def check_collision(self, block):
         " Check current block collsion to grid or other blocks"
-        print(block.calculate_height() + block.block_position[0])
-        if block.calculate_height() + block.block_position[0] >= len(self.game_state) - 1:
+        current = np.count_nonzero(self.set_current_block_to_gamestate(block))
+        temp_block = copy.deepcopy(block)
+        temp_block.block_position = (temp_block.block_position[0] + 1, temp_block.block_position[1])
+        next_jump = np.count_nonzero(self.set_current_block_to_gamestate(temp_block))
+        if current > next_jump:
             return True
         return False
