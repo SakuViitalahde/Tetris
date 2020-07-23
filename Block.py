@@ -1,4 +1,5 @@
 import numpy as np
+import copy
 
 class Block():
     def __init__(self, block_matrix, shape):
@@ -7,24 +8,46 @@ class Block():
         self.block_matrix = block_matrix # This is 2x2,3x3 or 4x4 depending from blocktype
         self.shape = shape # Shape of block
         self.timer = 10
+        self.dropped = False
     
-    def rotate_block(self):
+    def rotate_block(self, game_state):
         """
         Rotate Matrix 90 degrees clockwise
         """
-        self.block_matrix = np.rot90(self.block_matrix, k=1, axes=(1,0))
+        next_step_block = copy.deepcopy(self)
+        next_step_block.block_matrix = np.rot90(next_step_block.block_matrix, k=1, axes=(1,0))
+        if not game_state.check_collision(self, next_step_block):
+            self.block_matrix = np.rot90(self.block_matrix, k=1, axes=(1,0))
+    
+    def move_left(self, game_state):
+        """
+        Move block left ones.
+        """
+        next_step_block = copy.deepcopy(self)
+        next_step_block.block_position = (next_step_block.block_position[0], next_step_block.block_position[1] - 1)
+        if not game_state.check_collision(self, next_step_block):
+            self.block_position = (self.block_position[0], self.block_position[1] - 1)
 
-    def check_collision(self, game_state):
-        pass
+    def move_right(self, game_state):
+        """
+        Move block right ones.
+        """
+        next_step_block = copy.deepcopy(self)
+        next_step_block.block_position = (next_step_block.block_position[0], next_step_block.block_position[1] + 1)
+        if not game_state.check_collision(self, next_step_block):
+            self.block_position = (self.block_position[0], self.block_position[1] + 1)
 
-    def move(self, game_state):
+    def move_down(self, game_state):
         """Move Block one space down
         
         Returns: True if able to move and False if not.
         """
         self.timer -= 1
-        if self.timer <= 0:
-            if not game_state.check_collision(self):
+
+        if self.timer <= 0 or self.dropped:
+            next_step_block = copy.deepcopy(self)
+            next_step_block.block_position = (next_step_block.block_position[0] + 1, next_step_block.block_position[1])
+            if not game_state.check_collision(self, next_step_block):
                 self.block_position = (self.block_position[0] + 1, self.block_position[1])
                 self.timer = 10
                 return True

@@ -3,7 +3,7 @@ import os
 import copy
 import numpy as np
 
-BACKGROUND_IMAGE = pygame.image.load(os.path.join("imgs","bg.png"))
+BACKGROUND_IMAGE = pygame.image.load(os.path.join("imgs","bg2.png"))
 pygame.font.init()
 STAT_FONT = pygame.font.SysFont("comicsains", 20)
 
@@ -39,11 +39,11 @@ class GameState():
         for x in range(start[0],end[0], 30):
             for y in range(start[1],end[1], 30):
                 rect = pygame.Rect(x, y, blockSize, blockSize)
-                pygame.draw.rect(win, (230, 230, 230), rect, 1)
+                pygame.draw.rect(win, (230, 230, 230, 10), rect, 1)
         
         # Draw outside frame
         frame_rect = pygame.Rect(start[0] - 1, start[1]- 1, 301, 661)
-        pygame.draw.rect(win, (100, 100, 100), frame_rect, 1)
+        pygame.draw.rect(win, (100, 100, 100, 40), frame_rect, 1)
 
     def draw_blocks(self, win, current_block):
         """
@@ -83,17 +83,15 @@ class GameState():
         current_game_state = copy.deepcopy(self.game_state)
         for x, row in enumerate(current_block.block_matrix):
             for y, e in enumerate(row):
-                if e != 0 and x + current_block.block_position[0] < 22:
+                if e != 0 and x + current_block.block_position[0] < 22 and current_block.block_position[1] >= 0 - y and y + current_block.block_position[1] < 10:
                     current_game_state[x + current_block.block_position[0]][y + current_block.block_position[1]] = e
 
         return current_game_state
 
-    def check_collision(self, block):
+    def check_collision(self, block, next_block_position):
         " Check current block collsion to grid or other blocks"
         current = np.count_nonzero(self.set_current_block_to_gamestate(block))
-        temp_block = copy.deepcopy(block)
-        temp_block.block_position = (temp_block.block_position[0] + 1, temp_block.block_position[1])
-        next_jump = np.count_nonzero(self.set_current_block_to_gamestate(temp_block))
+        next_jump = np.count_nonzero(self.set_current_block_to_gamestate(next_block_position))
         if current > next_jump:
             return True
         return False
@@ -106,3 +104,18 @@ class GameState():
             return True
         else:
             return False
+    
+    def check_tetris(self, score):
+        """
+        Check and remove rows with tetris.
+        Also add 10p per tetris
+        """
+        new_game_state = []
+        for row in self.game_state:
+            if 0 in row:
+                new_game_state.append(row)
+            else:
+                new_game_state.insert(0, [0] * 10)
+                score += 10
+        self.game_state = new_game_state
+        return score
