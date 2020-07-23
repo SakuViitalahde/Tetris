@@ -4,12 +4,14 @@ import copy
 import numpy as np
 
 BACKGROUND_IMAGE = pygame.image.load(os.path.join("imgs","bg.png"))
+pygame.font.init()
+STAT_FONT = pygame.font.SysFont("comicsains", 20)
 
 class GameState():
     def __init__(self):
         self.game_state =  [[0] * 10 for i in range(22)]
 
-    def draw_window(self, win, current_block):
+    def draw_window(self, win, current_block, score):
 
         ## We need to parameters game state 
         ## From gamestart we draw corrent blocks
@@ -19,6 +21,11 @@ class GameState():
         win.blit(BACKGROUND_IMAGE, (0,0))
         self.drawGrid(win)
         self.draw_blocks(win, current_block)
+
+
+        text = STAT_FONT.render(f"Score: {score}", 1, (255,255,255))
+        win.blit(text,(375, 10))
+        
         pygame.display.update()
 
     def drawGrid(self, win):
@@ -90,3 +97,12 @@ class GameState():
         if current > next_jump:
             return True
         return False
+
+    def check_fail(self):
+        """
+        Check if game is ended.
+        """
+        if len(set(self.game_state[0])) > 1 or len(set(self.game_state[1])) > 1:
+            return True
+        else:
+            return False
