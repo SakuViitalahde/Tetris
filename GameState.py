@@ -11,7 +11,7 @@ class GameState():
     def __init__(self):
         self.game_state =  [[0] * 10 for i in range(22)]
 
-    def draw_window(self, win, current_block, score):
+    def draw_window(self, win, current_block, score, next_block):
 
         ## We need to parameters game state 
         ## From gamestart we draw corrent blocks
@@ -21,6 +21,7 @@ class GameState():
         win.blit(BACKGROUND_IMAGE, (0,0))
         self.drawGrid(win)
         self.draw_blocks(win, current_block)
+        self.draw_next_block(win, next_block)
 
 
         text = STAT_FONT.render(f"Score: {score}", 1, (255,255,255))
@@ -44,6 +45,54 @@ class GameState():
         # Draw outside frame
         frame_rect = pygame.Rect(start[0] - 1, start[1]- 1, 301, 661)
         pygame.draw.rect(win, (100, 100, 100, 40), frame_rect, 1)
+    
+    def draw_next_block(self, win, next_block):
+        """
+        Draw next block hint.
+        """
+        # Add next block text.
+        text = STAT_FONT.render(f"Next block:", 1, (255,255,255))
+        win.blit(text,(450, 43))
+
+        # Position of next block window
+        start = (450, 90)
+        end = (570, 210)
+
+        # Draw outside frame
+        frame_rect = pygame.Rect(start[0] - 25, start[1] - 25, end[0]- 400, end[1] - 100)
+        pygame.draw.rect(win, (100, 100, 100, 40), frame_rect, 1)
+
+        blockSize = 29 #Set the size of the grid block  
+        block_len = len(next_block.block_matrix)
+
+        # change start position in block length 2 or 3 to set it middle
+        if block_len == 3:
+            start = (465, 90)
+        elif block_len == 2:
+            start = (480, 90)
+
+        # Drow blocks to next block area
+        for index_x, x in enumerate(range(start[0],end[0], 30)):
+            for index_y, y in enumerate(range(start[1],end[1], 30)):
+                if index_x < block_len and index_y < block_len:
+                    value = next_block.block_matrix[index_y][index_x]
+                    if value > 0:
+                        rect = pygame.Rect(x, y, blockSize, blockSize)
+                        if value == 1:
+                            pygame.draw.rect(win, (230, 230, 0), rect, 0) ## Yellow
+                        elif value == 2:
+                            pygame.draw.rect(win, (230, 0, 0), rect, 0) ## Red
+                        elif value == 3:
+                            pygame.draw.rect(win, (0 ,230 , 0), rect, 0) ## Green
+                        elif value == 4:
+                            pygame.draw.rect(win, (0, 230, 230), rect, 0) ## Cyan
+                        elif value == 5:
+                            pygame.draw.rect(win, (230, 0, 230), rect, 0) ## Purple
+                        elif value == 6:
+                            pygame.draw.rect(win, (255, 125, 0), rect, 0) ## Orange
+                        elif value == 7:
+                            pygame.draw.rect(win, (0, 0, 230), rect, 0) ## Blue
+
 
     def draw_blocks(self, win, current_block):
         """

@@ -31,7 +31,7 @@ def main():
     score = 0
 
     while running:
-        clock.tick(30)
+        clock.tick(150)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -48,13 +48,12 @@ def main():
             if getPressed(keys_pressed, pygame.K_UP, 50)and not current_block.dropped:
                 current_block.rotate_block(game_state)
         
-        # Current Block
-        if not current_block:
-            current_block = next_block
 
         # Next Block
         if not next_block:
             next_block = blocks.get_random_block()
+
+        game_state.draw_window(win, current_block, score, next_block)
 
         # Move Block
         if not current_block.move_down(game_state):
@@ -62,8 +61,6 @@ def main():
             current_block = next_block
             next_block = None
             score += 1
-
-        game_state.draw_window(win, current_block, score)
 
         score = game_state.check_tetris(score)
 

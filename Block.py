@@ -7,7 +7,7 @@ class Block():
         self.block_position = (1,4) if len(block_matrix) == 2 else (1,3) 
         self.block_matrix = block_matrix # This is 2x2,3x3 or 4x4 depending from blocktype
         self.shape = shape # Shape of block
-        self.timer = 10
+        self.timer = 30
         self.dropped = False
     
     def rotate_block(self, game_state):
@@ -49,7 +49,7 @@ class Block():
             next_step_block.block_position = (next_step_block.block_position[0] + 1, next_step_block.block_position[1])
             if not game_state.check_collision(self, next_step_block):
                 self.block_position = (self.block_position[0] + 1, self.block_position[1])
-                self.timer = 10
+                self.timer = 30
                 return True
             else:
                 return False
