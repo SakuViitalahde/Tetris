@@ -15,9 +15,13 @@ class Block():
         Rotate Matrix 90 degrees clockwise
         """
         next_step_block = copy.deepcopy(self)
-        next_step_block.block_matrix = np.rot90(next_step_block.block_matrix, k=1, axes=(1,0))
+        next_step_block.block_matrix = self.rotate_matrix(next_step_block.block_matrix)
         if not game_state.check_collision(self, next_step_block):
-            self.block_matrix = np.rot90(self.block_matrix, k=1, axes=(1,0))
+            self.block_matrix = self.rotate_matrix(self.block_matrix)
+            print(self.block_matrix)
+    
+    def rotate_matrix(self,m):
+        return list(list(x)[::-1] for x in zip(*m))
     
     def move_left(self, game_state):
         """
